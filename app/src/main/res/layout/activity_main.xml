@@ -11,7 +11,7 @@
 
        android:id="@+id/list"
        android:layout_width="match_parent"
-       android:layout_height="434dp"
+       android:layout_height="30dp"
        tools:layout_editor_absoluteX="8dp"
        tools:layout_editor_absoluteY="0dp">
 
@@ -27,5 +27,11 @@
        android:text="New"
        tools:layout_editor_absoluteX="0dp"
        tools:layout_editor_absoluteY="0dp" />
+
+   <TextView
+       android:id="@+id/textView"
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content"
+       android:text="TextView" />
 
 </LinearLayout>

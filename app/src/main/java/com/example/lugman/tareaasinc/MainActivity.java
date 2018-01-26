@@ -1,6 +1,7 @@
 package com.example.lugman.tareaasinc;
 
 import android.content.ContentValues;
+import android.content.Context;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -20,6 +21,8 @@ import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.BufferedWriter;
 import java.io.ByteArrayInputStream;
+import java.io.DataOutputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -30,6 +33,11 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
+
+
 
 import static android.R.attr.name;
 
@@ -64,10 +72,11 @@ public class MainActivity extends AppCompatActivity {
         protected Void doInBackground(Void... params) {
             URL url = null;
             try {
-                url = new URL("http://www.lugman.com.es/tienda/php/datosAndroid.php");
+                url = new URL("http://www.carlossilla.com.es/android/personas.php");
             } catch (MalformedURLException e) {
                 e.printStackTrace();
             }
+
             HttpURLConnection urlConnection = null;
             try {
                 urlConnection = (HttpURLConnection) url.openConnection();
@@ -80,9 +89,8 @@ public class MainActivity extends AppCompatActivity {
 
 
                     in = new BufferedInputStream(urlConnection.getInputStream());
-                    
-                    byte[] contents = new byte[1024];
 
+                    byte[] contents = new byte[1024];
                     int bytesRead = 0;
                     String strFileContents=null;
                     while((bytesRead = in.read(contents)) != -1) {
@@ -92,8 +100,6 @@ public class MainActivity extends AppCompatActivity {
                         strFileContents += new String(contents, 0, bytesRead);
                     }
                     MiJSON  = strFileContents;
-
-
 
 
                     publishProgress(strFileContents);
@@ -142,6 +148,7 @@ public class MainActivity extends AppCompatActivity {
     }
     private class Añadir  extends AsyncTask <String,String,Void>{
         String Producto;
+        String MiJSON2;
         Añadir(String aña){
          Producto=aña;
         }
@@ -151,6 +158,11 @@ public class MainActivity extends AppCompatActivity {
 
             URL url= null;
             HttpURLConnection urlConnection = null;
+            try {
+                url = new URL("http://www.carlossilla.com.es/android/insertar.php");
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            }
             try {
                 urlConnection = (HttpURLConnection) url.openConnection();
             } catch (IOException e) {
@@ -162,22 +174,57 @@ public class MainActivity extends AppCompatActivity {
                 urlConnection.setRequestMethod("POST");
 
 
+
+//                List<NameValuePair> params = new ArrayList<NameValuePair>();
+
+
                 OutputStream out = new BufferedOutputStream(urlConnection.getOutputStream());
 
-                BufferedWriter writer = new BufferedWriter (new OutputStreamWriter(out, "UTF-8"));
+//                BufferedWriter writer = new BufferedWriter (new OutputStreamWriter(out, "UTF-8"));
+                DataOutputStream writer = new DataOutputStream(urlConnection.getOutputStream());
+
+                JSONObject jsonObj = new JSONObject();
+                //Añadimos el nombre, apellidos y email del usuario
+                try {
+                    jsonObj.put("user","juan");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                try {
+                    jsonObj.put("pass", "pepe");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                List  l = new LinkedList();
+                l.addAll(Arrays.asList(jsonObj));
+                String jsonString = l.toString();
 
 
-
-                String donnees = URLEncoder.encode("Nombre", "UTF-8")+ "="+URLEncoder.encode("LECHE", "UTF-8");
-
-                writer.write(donnees);
+                String pasar = jsonObj.toString();
+                String urlParameters = "json="+jsonString;
+                Log.d("ENVIAR",urlParameters);
+                writer.writeBytes(urlParameters);
 
                 writer.flush();
 
                 writer.close();
 
-
                 InputStream in = new BufferedInputStream(urlConnection.getInputStream());
+
+                in = new BufferedInputStream(urlConnection.getInputStream());
+
+                byte[] contents = new byte[1024];
+                int bytesRead = 0;
+                String strFileContents=null;
+                while((bytesRead = in.read(contents)) != -1) {
+                    if (strFileContents == null){
+                        strFileContents = new String(contents, 0, bytesRead);
+                    }
+//                    strFileContents += new String(contents, 0, bytesRead);
+                }
+                 MiJSON2  = strFileContents;
+
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -192,8 +239,16 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-            tarea.execute();
+//            tarea.execute();
+            try {
+                Log.d("REPETIDO",MiJSON2);
+                jsonRealizar2(MiJSON2);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
         }
+
     }
 
     private void jsonRealizar(String json) throws JSONException {
@@ -201,19 +256,19 @@ public class MainActivity extends AppCompatActivity {
                         JSONObject obj = arr.getJSONObject(1);
                         String TXT = obj.getString("Nombre");
                         ArrayList<String> lista = new ArrayList<String>();
-
-
                                 for (int i = 0; i< arr.length(); i++){
                                     lista.add(arr.getJSONObject(i).getString("Nombre"));
                                 }
-
-
                         ArrayAdapter<String> adapter =  new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,lista);
                         list.setAdapter(adapter);
 
         Log.d("BUENA",json);
 
     }
-}
+    private void jsonRealizar2(String json) throws JSONException {
+        TextView tv =  findViewById(R.id.textView);
+        tv.setText(json);
+    }
+    }
 
 
