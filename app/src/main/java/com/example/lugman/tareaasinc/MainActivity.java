@@ -1,11 +1,18 @@
 package com.example.lugman.tareaasinc;
 
+import android.app.ProgressDialog;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
+import android.icu.text.IDNA;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.ContextMenu;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -47,16 +54,25 @@ public class MainActivity extends AppCompatActivity {
     Button btn,btn2;
     ListView list,list2;
     Asincrona tarea;
+    ArrayList<String> lista2;
+    ProgressDialog pd;
     EditText ed1,ed2,ed3,ed4,ed5,ed6,ed7;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        btn2 = findViewById(R.id.button);
+        btn2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent= new Intent(MainActivity.this,Crear.class);
+                startActivity(intent);
+            }
+        });
 
         tarea = new Asincrona();
         tarea.execute();
         btn =  findViewById(R.id.newB);
-        btn2 =  findViewById(R.id.newC);
 
         ed1 = findViewById(R.id.editText);
         ed2 = findViewById(R.id.editText2);
@@ -64,34 +80,12 @@ public class MainActivity extends AppCompatActivity {
         ed4 = findViewById(R.id.editText4);
         ed5 = findViewById(R.id.editText5);
         ed6 = findViewById(R.id.editText6);
-        ed7 = findViewById(R.id.editText7);
 
-        btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Añadir aña =  new Añadir(ed1.getText().toString(),ed2.getText().toString(),ed3.getText().toString(),"a","");
-                aña.execute();
-                ed1.setText("");
-                ed2.setText("");
-                ed3.setText("");
 
-            }
-        });
-        btn2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Añadir aña =  new Añadir(ed4.getText().toString(),ed5.getText().toString(),ed6.getText().toString(),"b",ed7.getText().toString());
-                aña.execute();
-            }
-        });
+
+
         list =  findViewById(R.id.list);
-        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Añadir aña =  new Añadir(ed4.getText().toString(),ed5.getText().toString(),ed6.getText().toString(),"2",String.valueOf(i));
-                aña.execute();
-            }
-        });
+        registerForContextMenu(list);
 
     }
 
@@ -151,6 +145,10 @@ public class MainActivity extends AppCompatActivity {
         protected void onPreExecute() {
             super.onPreExecute();
 //            Toast.makeText(MainActivity.this, "Pree", Toast.LENGTH_SHORT).show();
+           pd= new ProgressDialog(MainActivity.this);
+
+            pd.setMessage("loading");
+            pd.show();
 
         }
 
@@ -166,6 +164,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(Void aVoid) {
 
+            pd.cancel();
             super.onPostExecute(aVoid);
             try {
                 jsonRealizar(MiJSON);
@@ -292,10 +291,10 @@ public class MainActivity extends AppCompatActivity {
                         JSONObject obj = arr.getJSONObject(1);
 
                         ArrayList<String> lista = new ArrayList<String>();
-                        ArrayList<String> lista2 = new ArrayList<String>();
+                         lista2 = new ArrayList<String>();
                                 for (int i = 0; i< arr.length(); i++){
-                                    lista.add(arr.getJSONObject(i).getString("nombre")+" (id:"+arr.getJSONObject(i).getString("id")+")");
-                                    lista2.add("id");
+                                    lista.add(arr.getJSONObject(i).getString("nombre")+" "+arr.getJSONObject(i).getString("apellido")+",Edad: "+arr.getJSONObject(i).getString("edad")+" (id:"+arr.getJSONObject(i).getString("id")+")");
+                                    lista2.add(arr.getJSONObject(i).getString("id"));
                                 }
 
                         ArrayAdapter<String> adapter =  new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,lista);
@@ -304,10 +303,38 @@ public class MainActivity extends AppCompatActivity {
 //        Log.d("BUENA",json);
 
     }
-//    private void jsonRealizar2(String json) throws JSONException {
-//        TextView tv =  findViewById(R.id.textView);
-//        tv.setText(json);
-//    }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        {
+            super.onCreateContextMenu(menu, v, menuInfo);
+
+            MenuInflater inflater = getMenuInflater();
+            inflater.inflate(R.menu.menu, menu);
+        }
+
     }
+
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+        Log.d("inf", lista2.get(info.position));
+        switch (item.getItemId()) {
+            case R.id.mod:
+                Intent intent= new Intent(MainActivity.this,Editar.class);
+                intent.putExtra("ID",lista2.get(info.position));
+                startActivity(intent);
+                return true;
+            case R.id.del:
+                Añadir aña =  new Añadir("","","","c",lista2.get(info.position));
+                aña.execute();
+                return true;
+            default:
+                return super.onContextItemSelected(item);
+        }
+
+    }
+}
 
 

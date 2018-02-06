@@ -5,161 +5,33 @@
     android:layout_width="match_parent"
     android:orientation="vertical"
     android:layout_height="match_parent"
-    tools:context="com.example.lugman.tareaasinc.MainActivity">
+    tools:context="com.example.lugman.tareaasinc.MainActivity"
+    android:weightSum="1">
+
+   <TextView
+       android:id="@+id/textView"
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content"
+       android:padding="10dp"
+       android:text="Usuarios"
+       android:textAlignment="center"
+       android:textColor="@android:color/background_dark"
+       android:textSize="24sp"
+       android:textStyle="bold" />
 
    <ListView
        android:id="@+id/list"
        android:layout_width="wrap_content"
-       android:layout_height="245dp"
+       android:layout_height="399dp"
        tools:layout_editor_absoluteX="8dp"
-       tools:layout_editor_absoluteY="0dp"></ListView>
+       tools:layout_editor_absoluteY="0dp"
+       android:layout_weight="0.77"></ListView>
 
-   <ScrollView
-       style="@android:style/Widget.DeviceDefault.Light.ScrollView"
-       android:layout_width="match_parent"
-       android:layout_height="match_parent">
-
-      <LinearLayout
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:orientation="vertical">
-
-         <TextView
-             android:layout_width="match_parent"
-             android:layout_height="wrap_content"
-             android:gravity="center"
-             android:text="Nombre" />
-
-         <EditText
-             android:id="@+id/editText"
-             android:layout_width="match_parent"
-             android:layout_height="wrap_content"
-             android:layout_weight="1"
-             android:ems="10"
-             android:inputType="textPersonName"
-             android:text="" />
-
-         <TextView
-             android:layout_width="match_parent"
-             android:layout_height="wrap_content"
-             android:gravity="center"
-             android:text="Apellido" />
-
-         <EditText
-             android:id="@+id/editText2"
-             android:layout_width="match_parent"
-             android:layout_height="wrap_content"
-             android:layout_weight="1"
-             android:ems="10"
-             android:inputType="textPersonName"
-             android:text="" />
-
-         <TextView
-             android:layout_width="match_parent"
-             android:layout_height="wrap_content"
-             android:gravity="center"
-             android:text="Ead" />
-
-         <EditText
-             android:id="@+id/editText3"
-             android:layout_width="match_parent"
-             android:layout_height="wrap_content"
-             android:layout_weight="1"
-             android:ems="10"
-             android:inputType="textPersonName"
-             android:text="" />
-
-         <Button
-             android:id="@+id/newB"
-             style="@android:style/Widget.Material.Light.Button.Toggle"
-             android:layout_width="wrap_content"
-             android:layout_height="wrap_content"
-             android:layout_gravity="center_horizontal"
-             android:background="@android:color/holo_green_light"
-             android:text="New"
-             tools:layout_editor_absoluteX="0dp"
-             tools:layout_editor_absoluteY="0dp" />
-
-         <TextView
-             android:layout_width="match_parent"
-             android:layout_height="wrap_content"
-             android:background="@color/colorAccent"
-             android:gravity="center"
-             android:padding="15dp"
-             android:text="modificar"
-             android:textSize="15dp" />
-
-         <TextView
-             android:layout_width="match_parent"
-             android:layout_height="wrap_content"
-             android:gravity="center"
-             android:text="Id" />
-
-         <EditText
-             android:id="@+id/editText7"
-             android:layout_width="match_parent"
-             android:layout_height="wrap_content"
-             android:layout_weight="1"
-             android:ems="10"
-             android:inputType="textPersonName"
-             android:text="" />
-
-         <TextView
-             android:layout_width="match_parent"
-             android:layout_height="wrap_content"
-             android:gravity="center"
-             android:text="Nombre" />
-
-         <EditText
-             android:id="@+id/editText4"
-             android:layout_width="match_parent"
-             android:layout_height="wrap_content"
-             android:layout_weight="1"
-             android:ems="10"
-             android:inputType="textPersonName"
-             android:text="" />
-
-         <TextView
-             android:layout_width="match_parent"
-             android:layout_height="wrap_content"
-             android:gravity="center"
-             android:text="Apellido" />
-
-         <EditText
-             android:id="@+id/editText5"
-             android:layout_width="match_parent"
-             android:layout_height="wrap_content"
-             android:layout_weight="1"
-             android:ems="10"
-             android:inputType="textPersonName"
-             android:text="" />
-
-         <TextView
-             android:layout_width="match_parent"
-             android:layout_height="wrap_content"
-             android:gravity="center"
-             android:text="Ead" />
-
-         <EditText
-             android:id="@+id/editText6"
-             android:layout_width="match_parent"
-             android:layout_height="wrap_content"
-             android:layout_weight="1"
-             android:ems="10"
-             android:inputType="textPersonName"
-             android:text="" />
-
-         <Button
-             android:id="@+id/newC"
-             style="@style/Widget.AppCompat.Button.Borderless.Colored"
-             android:layout_width="wrap_content"
-             android:layout_height="wrap_content"
-             android:layout_gravity="center_horizontal"
-             android:background="@android:color/holo_green_light"
-             android:text="Modificar"
-             tools:layout_editor_absoluteX="0dp"
-             tools:layout_editor_absoluteY="0dp" />
-      </LinearLayout>
-   </ScrollView>
+    <Button
+        android:id="@+id/button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/holo_green_dark"
+        android:text="New" />
 
 </LinearLayout>
